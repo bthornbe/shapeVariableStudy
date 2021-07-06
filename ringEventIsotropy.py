@@ -30,8 +30,9 @@ uniformRing = ringGen(numBins)
 # non-normalized weights of uniform distribution (they get normalized in emd_calc):
 uniformRingPt = np.array([np.full(len(uniformRing), 1.)])
 
-#! create distance matrix:
-M=np.array(["some stuff"])
+# create distance matrix:
+# due to binning the data the same as the uniform distribution, I can calculate the distance matrix of the uniform distribution with itself for the same result:
+M = _cdist_phicos(uniformRing, uniformRing)
 
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
@@ -56,8 +57,9 @@ for mass in dFrames:
     for i in range(numBins):
         filteredFrame = filteredFrame.Define("ringPT" + str(i), "double ringPT; for (int i=0; i<nTracks; i++) { phiBin=static_cast<int>(numBins*Tracks[i]/(2*pi); if (phiBin == " + str(i) + ") ringPT+=Tracks[i].phi; return ringPT}")
 
-    # make an array of ring event isotropy values. might have to use a loop over events? definitely won't work as is
-    filteredFrame = filteredFrame.Define("ringIsotropy", "return " + str( emd_Calc(ringPT, uniformRingPt, M, numItermax=100000000,log=True)))
+    # make a column of ring event isotropy values:
+    # yes, I am calling Python from C++ from Python. will I have to import inside this? will that be super inefficient?
+    filteredFrame = filteredFrame.Define("ringIsotropy", "return TPython::Exec( emd_Calc(ringPT, uniformRingPt, M, numItermax=100000000,log=True))")
 
 
 can = ROOT.TCanvas("canName", "canTitle")
