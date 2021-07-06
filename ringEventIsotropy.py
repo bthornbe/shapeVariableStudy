@@ -34,7 +34,7 @@ uniformRingPt = np.array([np.full(len(uniformRing), 1.)])
 # due to binning the data the same as the uniform distribution, I can calculate the distance matrix of the uniform distribution with itself for the same result:
 M = _cdist_phicos(uniformRing, uniformRing)
 
-pi = np.Pi()
+pi = np.pi
 
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
