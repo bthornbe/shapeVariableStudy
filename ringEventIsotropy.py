@@ -34,6 +34,8 @@ uniformRingPt = np.array([np.full(len(uniformRing), 1.)])
 # due to binning the data the same as the uniform distribution, I can calculate the distance matrix of the uniform distribution with itself for the same result:
 M = _cdist_phicos(uniformRing, uniformRing)
 
+pi = np.Pi()
+
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
@@ -49,13 +51,13 @@ for mass in dFrames:
 
     #!pick one of the following loop structures:
     # A. here I make a column of arrays, then make columns of the individual values (this is probably more efficient since less is happening in the loop over bins):
-    filteredFrame = filteredFrame.Define("ringPT", "double ringPT[" + str(numBins) + "]; for (int i=0; i<nTracks; i++) { int phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i]/(2*pi); ringPT[phiBin]+=Tracks[i].phi; return ringPT}")
+    filteredFrame = filteredFrame.Define("ringPT", "double ringPT[" + str(numBins) + "]; for (int i=0; i<nTracks; i++) { int phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i]/(2*" + str(pi) + "); ringPT[phiBin]+=Tracks[i].phi; return ringPT}")
     for i in range(numBins):
         filteredFrame = filteredFrame.Define("ringPT" + str(i), "return ringPT[" + str(i) + "]")
 
     # B. here I make the columns one at a time by selecting tracks in the right bins:
     for i in range(numBins):
-        filteredFrame = filteredFrame.Define("ringPT" + str(i), "double ringPT; for (int i=0; i<nTracks; i++) { phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i]/(2*pi); if (phiBin == " + str(i) + ") ringPT+=Tracks[i].phi; return ringPT}")
+        filteredFrame = filteredFrame.Define("ringPT" + str(i), "double ringPT; for (int i=0; i<nTracks; i++) { phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i]/(2*" + str(pi) + "); if (phiBin == " + str(i) + ") ringPT+=Tracks[i].phi; return ringPT}")
 
     # make a column of ring event isotropy values:
     # yes, I am calling Python from C++ from Python. will I have to import inside this? will that be super inefficient?
