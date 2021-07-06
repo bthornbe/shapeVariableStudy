@@ -61,7 +61,7 @@ for mass in dFrames:
 
     # make a column of ring event isotropy values:
     # yes, I am calling Python from C++ from Python. will I have to import inside this? will that be super inefficient?
-    filteredFrame = filteredFrame.Define("ringIsotropy", "return TPython::Exec( emd_Calc(ringPT, " + str(uniformRingPt) + ", M, numItermax=100000000,log=True))")
+    filteredFrame = filteredFrame.Define("ringIsotropy", "return TPython::Exec( emd_Calc(ringPT, " + str(uniformRingPt) + ", M, numItermax=100000000,log=True));")
     hists[mass] = filteredFrame.Histo1D(("ringIsotropy" + mass, mass, 50, 0., 1.), "ringIsotropy")
 
 can = ROOT.TCanvas("canName", "canTitle")
