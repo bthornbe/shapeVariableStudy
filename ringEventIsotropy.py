@@ -51,7 +51,7 @@ for mass in dFrames:
 
     #!pick one of the following loop structures:
     # A. here I make a column of arrays, then make columns of the individual values (this is probably more efficient since less is happening in the loop over bins):
-    filteredFrame = filteredFrame.Define("ringPT", "double ringPT[" + str(numBins) + "]; for (int i=0; i<nTracks; i++) { int phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i].phi()/(2*" + str(pi) + "))); ringPT[phiBin]+=Tracks[i].phi(); return ringPT;}")
+    filteredFrame = filteredFrame.Define("ringPT", "double ringPT[" + str(numBins) + "]; for (int i=0; i<nTracks; i++) { int phiBin=static_cast<int>(" + str(numBins) + "*Tracks[i].phi()/(2*" + str(pi) + ")); ringPT[phiBin]+=Tracks[i].phi(); return ringPT;}")
     for i in range(numBins):
         filteredFrame = filteredFrame.Define("ringPT" + str(i), "return ringPT[" + str(i) + "]")
 
