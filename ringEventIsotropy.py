@@ -20,20 +20,18 @@ fnames = [
 dFrames = {}
 # this will be a dictionary of 1d histograms representing the distribution of transverse energy:
 hists = {}
-# this will be the same data as hists but stored as ndarrays:
-arrays = {}
-# M will be the distance matrix of the data and uniform distributions, here using the (1 - cos(phi)) metric
-M = {}
 
-emdVals = {}
 # number of bins:
-num = input("number of bins in phi:")
+numBins = int(input("number of bins in phi:"))
 
 # phi values of uniform(except it's discretized) distribution:
-uniformRing = ringGen(num)
+uniformRing = ringGen(numBins)
 
-# non-normalized weights (normalized in emd_calc):
-uniformRingPt=np.array([np.full(len(uniformRing[i]), 1.) for i in range(num)])
+# non-normalized weights of uniform distribution (they get normalized in emd_calc):
+uniformRingPt = np.array([np.full(len(uniformRing), 1.)])
+
+#! create distance matrix:
+M=np.array(["some stuff"])
 
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
@@ -43,16 +41,24 @@ for fname in fnames:
 
 for mass in dFrames:
     #it's more efficient to define nTracks before the loop, right?
-    dFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()")
+    dFrames[mass] = dFrames[mass].Define("nTracks", "Tracks.size()")
     # find the HT the detector "sees" so that we can cut on that for l1 trigger:
-    dFrames[mass]=dFrames[mass].Define("cutHT", "double cutht=0; for (int i=0; i<nTracks; i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht")
-    filteredFrame=dFrames[mass].Filter("cutHT>500")
-    #! describe this better:
-    # by creating a histogram of phi weighted by pt, I bin the transverse energy:
-    hists[mass] = filteredFrame.Histo1D((mass+"ring", mass, num, 0., 2*np.pi), "phi", "pt")
-    arrays[mass] = from1dhisttoarray(hists[mass]) #! this method doesn't work yet
-    M[mass] = _cdist_phicos(arrays[mass], uniformRing)
-    emdVals[mass] = emd_Calc(arrays[mass], uniformRingPt, M, numItermax=100000000,log=True)
+    dFrames[mass] = dFrames[mass].Define("cutHT", "double cutht=0; for (int i=0; i<nTracks; i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht")
+    filteredFrame = dFrames[mass].Filter("cutHT>500")
+
+    #!pick one of the following loop structures:
+    # A. here I make a column of arrays, then make columns of the individual values (this is probably more efficient since less is happening in the loop over bins):
+    filteredFrame = filteredFrame.Define("ringPT", "double ringPT[numBins]; for (int i=0; i<nTracks; i++) { phiBin=static_cast<int>(numBins*Tracks[i]/(2*pi); ringPT[phiBin]+=Tracks[i].phi; return ringPT}")
+    for i in range(numBins):
+        filteredFrame = filteredFrame.Define("ringPT" + str(i), "return ringPT[" + str(i) + "]")
+
+    # B. here I make the columns one at a time by selecting tracks in the right bins:
+    for i in range(numBins):
+        filteredFrame = filteredFrame.Define("ringPT" + str(i), "double ringPT; for (int i=0; i<nTracks; i++) { phiBin=static_cast<int>(numBins*Tracks[i]/(2*pi); if (phiBin == " + str(i) + ") ringPT+=Tracks[i].phi; return ringPT}")
+
+    # make an array of ring event isotropy values. might have to use a loop over events? definitely won't work as is
+    filteredFrame = filteredFrame.Define("ringIsotropy", "return " + str( emd_Calc(ringPT, uniformRingPt, M, numItermax=100000000,log=True)))
+
 
 can = ROOT.TCanvas("canName", "canTitle")
 
