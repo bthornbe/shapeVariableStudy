@@ -28,7 +28,7 @@ numBins = int(input("number of bins in phi:"))
 uniformRing = ringGen(numBins)
 
 # non-normalized weights of uniform distribution (they get normalized in emd_calc):
-uniformRingPt = np.array([np.full(len(uniformRing), 1.)])
+uniformRingPt = np.full(len(uniformRing), 1.)
 
 # create distance matrix:
 # due to binning the data the same as the uniform distribution, I can calculate the distance matrix of the uniform distribution with itself for the same result:
