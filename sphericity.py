@@ -43,8 +43,8 @@ for mass in dFrames:
     print("d3c")
     #filteredFrame = filteredFrame.Define("trackMagnitudes", "vector<double> trackmags; for (int i=0; i<nTracks; i++)  trackmags.push_back(sqrt(Tracks[i].Perp2())); return trackmags;")
     filteredFrame = filteredFrame.Define("momenta", "double p[nTracks][3]; for (int i=0; i<nTracks; i++) {p[i][0]=Tracks[i].x(); p[i][1]=Tracks[i].y(); p[i][2]=Tracks[i].z();} return p;")
-    filteredFrame = filteredFrame.Define("denominator", " double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2); return denom;")
-    filteredFrame = filteredFrame.Define("sphericityTensor", "double s[3][3]={{0,0,0},{0,0,0},{0,0,0}}; for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracksi[i].Mag2)*denominator)}}}; return s;")
+    filteredFrame = filteredFrame.Define("denominator", " double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;")
+    filteredFrame = filteredFrame.Define("sphericityTensor", "double s[3][3]={{0,0,0},{0,0,0},{0,0,0}}; for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracksi[i].Mag2())*denominator)}}}; return s;")
     # perp2 is pt squared
     filteredFrame=filteredFrame.Define("filteredTracks", " int ftracks=0; for (int i=0; i<nTracks; i++) {if (TrackPtSquared[i] >" + str(trackPtCut**2) + " && abs(Tracks[i].Eta())<2.5 && Tracks_fromPV0[i]>=2 && Tracks_matchedToPFCandidate[i]) ftracks++;} return ftracks;")
     print("d4")
