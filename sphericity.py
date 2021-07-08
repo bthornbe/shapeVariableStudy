@@ -64,7 +64,7 @@ can = ROOT.TCanvas("canName", "canTitle")
 
 i = 0
 more_colors = [ROOT.kAzure+2, ROOT.kGreen+2, ROOT.kPink+4, ROOT.kOrange+10, ROOT.kOrange, ROOT.kSpring+7]
-for mass in cHists:
+for mass in cHists.keys():
     cHists[mass].SetLineColor(more_colors[i])
     cHists[mass].SetMarkerColor(more_colors[i])
     i += 1
