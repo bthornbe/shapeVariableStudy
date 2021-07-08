@@ -45,7 +45,7 @@ for mass in dFrames:
     filteredFrame = filteredFrame.Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;")
     filteredFrame = filteredFrame.Define("denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;")
     filteredFrame = filteredFrame.Define("sphericityTensor", "vector<vector<double>> s={{0,0,0},{0,0,0},{0,0,0}}; for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracks[i].Mag2())*denominator));}}} return s;")
-    filteredFrame = filteredFrame.Define("sphericity", "using Eigen::Matrix; Matrix<double, 3, 3> s; s << 0,0,0, 0,0,0, 0,0,0;")
+    filteredFrame = filteredFrame.Define("sphericity", "#include <Eigen> using Eigen::Matrix; Matrix<double, 3, 3> s; s << 0,0,0, 0,0,0, 0,0,0;")
     print("d4")
     #hists[mass] = filteredFrame.Histo1D(("filteredTracks"+mass,mass, 50, 0., 500.), "filteredTracks")
     print("d5")
