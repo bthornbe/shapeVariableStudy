@@ -1,6 +1,8 @@
 # make a histogram of sphericity
 
 import ROOT
+import gc #! turning off garbage collection for debug purposes.
+gc.disable()
 
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
