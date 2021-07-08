@@ -42,7 +42,7 @@ for mass in dFrames:
     filteredFrame=filteredFrame.Filter("cutHT>500")
     print("d3c")
     #filteredFrame = filteredFrame.Define("trackMagnitudes", "vector<double> trackmags; for (int i=0; i<nTracks; i++)  trackmags.push_back(sqrt(Tracks[i].Perp2())); return trackmags;")
-    filteredFrame = filteredFrame.Define("momenta", "double p[nTracks][3]; for (int i=0; i<nTracks; i++) {p[i][0]=Tracks[i].x(); p[i][1]=Tracks[i].y(); p[i][2]=Tracks[i].z();} return p;")
+    filteredFrame = filteredFrame.Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;")
     filteredFrame = filteredFrame.Define("denominator", " double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;")
     filteredFrame = filteredFrame.Define("sphericityTensor", "double s[3][3]={{0,0,0},{0,0,0},{0,0,0}}; for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracksi[i].Mag2())*denominator)}}}; return s;")
     # perp2 is pt squared
