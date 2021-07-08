@@ -41,13 +41,13 @@ for mass in dFrames:
     print("d3b")
     filteredFrame=filteredFrame.Filter("cutHT>500")
     print("d3c")
-    #filteredFrame = filteredFrame.Define("trackMagnitudes", "vector<double> trackmags; for (int i=0; i<nTracks; i++)  trackmags.push_back(sqrt(Tracks[i].Perp2())); return trackmags;")
+    #filteredFrame = filteredFrame.Define("trackMagnitudes", "vector<double> trackmags; for (int i=0; i<nTracks; i++)  trackmags.push_back(sqrt(Tracks[i].Mag2())); return trackmags;")
     filteredFrame = filteredFrame.Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;")
     filteredFrame = filteredFrame.Define("denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;")
     filteredFrame = filteredFrame.Define("sphericityTensor", "vector<vector<double>> s={{0,0,0},{0,0,0},{0,0,0}}; for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracks[i].Mag2())*denominator));}}} return s;")
-    # perp2 is pt squared
+    filteredFrame = filteredFrame.Define("sphericity", "Matrix<double, 3, 3> s; s << 0,0,0, 0,0,0, 0,0,0;")
     print("d4")
-    hists[mass] = filteredFrame.Histo1D(("filteredTracks"+mass,mass, 50, 0., 500.), "filteredTracks")
+    #hists[mass] = filteredFrame.Histo1D(("filteredTracks"+mass,mass, 50, 0., 500.), "filteredTracks")
     print("d5")
 print("e")
 #can I put this before the loop so I can combine the loops?
