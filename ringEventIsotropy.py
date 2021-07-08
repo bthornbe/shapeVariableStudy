@@ -44,6 +44,7 @@ for fname in fnames:
 
 for mass in dFrames:
     #it's more efficient to define nTracks before the loop, right?
+    #! use temporary frames instead
     dFrames[mass] = dFrames[mass].Define("nTracks", "Tracks.size()")
     # find the HT the detector "sees" so that we can cut on that for l1 trigger:
     dFrames[mass] = dFrames[mass].Define("cutHT", "double cutht=0; for (int i=0; i<nTracks; i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht;")
