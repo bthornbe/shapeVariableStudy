@@ -1,8 +1,6 @@
 # make a histogram of sphericity
 
 import ROOT
-import gc #! turning off garbage collection for debug purposes.
-gc.disable()
 
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
@@ -63,15 +61,21 @@ print("f")
 
 #copied from plotHelpers:
 can = ROOT.TCanvas("canName", "canTitle")
-
+print("g")
 i = 0
 more_colors = [ROOT.kAzure+2, ROOT.kGreen+2, ROOT.kPink+4, ROOT.kOrange+10, ROOT.kOrange, ROOT.kSpring+7]
+print("h")
 for mass in cHists.keys():
+    print("i")
     cHists[mass].SetLineColor(more_colors[i])
+    print("j")
     cHists[mass].SetMarkerColor(more_colors[i])
+    print("k")
     i += 1
+    print("l")
     i %= len(more_colors)
 
+print("m")
 cHists["mMed-125"].SetMinimum(0)
 cHists["mMed-125"].SetMaximum(1)
 cHists["mMed-125"].Draw("hist")
@@ -79,9 +83,12 @@ cHists["mMed-400"].Draw("same")
 cHists["mMed-750"].Draw("same")
 cHists["mMed-1000"].Draw("same")
 
+print("n")
+
 leg = ROOT.TLegend(.66, .64, .8, .88)
+print("o")
 for mass in cHists.keys():
     leg.AddEntry(cHists[mass], mass, "l")
 leg.Draw()
-
+print("p")
 can.SaveAs("sphericity.pdf")
