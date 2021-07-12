@@ -62,6 +62,7 @@ print("f")
 #copied from plotHelpers:
 can = ROOT.TCanvas("canName", "canTitle")
 print("g")
+'''
 i = 0
 more_colors = [ROOT.kAzure+2, ROOT.kGreen+2, ROOT.kPink+4, ROOT.kOrange+10, ROOT.kOrange, ROOT.kSpring+7]
 print("h")
@@ -73,11 +74,16 @@ for mass in cHists.keys():
     print("k")
     i += 1
     print("l")
-    i %= len(more_colors)
+    i %= len(more_colors)'''
 
+cHists["mMed-125"].SetLineColor(2)
+cHists["mMed-400"].SetLineColor(3)
+cHists["mMed-750"].SetLineColor(4)
+cHists["mMed-1000"].SetLineColor(6)
 print("m")
-cHists["mMed-125"].SetMinimum(0)
-cHists["mMed-125"].SetMaximum(1)
+
+#cHists["mMed-125"].SetMinimum(0)
+#cHists["mMed-125"].SetMaximum(1)
 cHists["mMed-125"].Draw("hist")
 cHists["mMed-400"].Draw("same")
 cHists["mMed-750"].Draw("same")
