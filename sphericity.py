@@ -62,7 +62,7 @@ print("f")
 #copied from plotHelpers:
 can = ROOT.TCanvas("canName", "canTitle")
 print("g")
-file = TFile('hists', 'RECREATE')
+file = ROOT.TFile('hists', 'RECREATE')
 print("g1")
 cHists["mMed-125"].Write()
 print("g2")
