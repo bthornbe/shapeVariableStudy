@@ -58,6 +58,7 @@ print("e")
 #can I put this before the loop so I can combine the loops?
 
 print("f")
+print(cHists.keys())
 
 #copied from plotHelpers:
 can = ROOT.TCanvas("canName", "canTitle")
