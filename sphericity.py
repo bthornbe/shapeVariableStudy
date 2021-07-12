@@ -62,6 +62,10 @@ print("f")
 #copied from plotHelpers:
 can = ROOT.TCanvas("canName", "canTitle")
 print("g")
+file = TFile('hists', 'RECREATE')
+print("g1")
+cHists["mMed-125"].Write()
+print("g2")
 '''
 i = 0
 more_colors = [ROOT.kAzure+2, ROOT.kGreen+2, ROOT.kPink+4, ROOT.kOrange+10, ROOT.kOrange, ROOT.kSpring+7]
