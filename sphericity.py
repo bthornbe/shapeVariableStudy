@@ -31,7 +31,7 @@ print("d")
 
 trackPtCut=1
 
-for mass in dFrames.keys():
+for mass in dFrames:
     print("d1")
     # it's more efficient to define ntracks before the loop, right?
     print("d2")
