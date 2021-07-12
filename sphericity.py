@@ -31,7 +31,7 @@ print("d")
 
 trackPtCut=1
 
-for mass in dFrames:
+for mass in dFrames.keys():
     print("d1")
     # it's more efficient to define ntracks before the loop, right?
     print("d2")
@@ -55,7 +55,7 @@ for mass in dFrames:
     dHists[mass] = filteredFrame.Histo1D(("D" + mass, mass, 50, 0., 1.), "D")
     print("d5")
 print("e")
-#can I put this before the loop so I can combine the loops?
+
 
 print("f")
 print(cHists.keys())
