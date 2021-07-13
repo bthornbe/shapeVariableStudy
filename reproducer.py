@@ -24,7 +24,7 @@ filteredFrame= dFrame.Define("nTracks", "Tracks.size()") \
     .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
 
 model = ROOT.RDF.TH1DModel("C", "C", 50, 0., 1.)
-cHist = filteredFrame.Histo1D(model, "C").Clone("cloneC")
+cHist = filteredFrame.Histo1D(model, "C")
 
 can = ROOT.TCanvas("canName", "canTitle")
 file = ROOT.TFile('hists', 'RECREATE')

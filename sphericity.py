@@ -101,4 +101,4 @@ for mass in cHists.keys():
     leg.AddEntry(cHists[mass], mass, "l")
 leg.Draw()
 print("p")
-can.SaveAs("sphericity.pdf")
+can.SaveAs("shapesPlot.pdf")
