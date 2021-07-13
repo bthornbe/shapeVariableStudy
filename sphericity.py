@@ -7,7 +7,7 @@ gc.disable()
 
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
-ROOT.ROOT.EnableImplicitMT()#enables multi-threading
+#ROOT.ROOT.EnableImplicitMT()#enables multi-threading
 
 print("b")
 floc = "/store/user/kdipetri/SUEP/Production_v0.2/2018/NTUP/"
