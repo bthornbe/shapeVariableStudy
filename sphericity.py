@@ -43,6 +43,7 @@ for fname in fnames:
         .Define("eigenVals", "TMatrixDSymEigen eigen(sphericityTensor); return eigen.GetEigenValues();") \
         .Define("C", "return 3*(eigenVals[0]*eigenVals[1]+eigenVals[0]*eigenVals[2]+eigenVals[1]*eigenVals[2]);") \
         .Define("D","return 27*eigenVals[0]*eigenVals[1]*eigenVals[2];")
+    print(filteredFrames[mass].Count().GetValue())
     print("d4")
     cHists[mass] = filteredFrames[mass].Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone("cloneC"+mass)
     dHists[mass] = filteredFrames[mass].Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone("cloneD"+mass)
