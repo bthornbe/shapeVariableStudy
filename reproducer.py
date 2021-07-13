@@ -16,7 +16,7 @@ filteredFrame= dFrame.Define("nTracks", "Tracks.size()") \
     .Filter("CutHT>500") \
     .Define("Momenta",
             "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
-    .Define("Val", "return (Momenta[0][0])")
+    .Define("Val", "return ((*Momenta)[0][0])")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, 0., 1.)
 cHist = filteredFrame.Histo1D(model, "Val")
