@@ -31,6 +31,7 @@ for fname in fnames:
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
     print("d1")
+    print (dFrames[mass].Count().GetValue())
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
     filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
