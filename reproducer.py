@@ -12,8 +12,8 @@ dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()"
     .Define("Val", "return (Momenta[0][0])")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, 0., 1.)
-cHist = dFrame.Histo1D(model, "Val")
+hist = dFrame.Histo1D(model, "Val")
 
 can = ROOT.TCanvas("canName", "canTitle")
 file = ROOT.TFile('reproducerHists', 'RECREATE')
-cHist.Write()
+hist.Write()
