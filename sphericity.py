@@ -19,6 +19,7 @@ fnames = [
 ]
 print("c")
 dFrames = {}
+filteredFrames[mass]s = {}
 cHists = {}
 dHists = {}
 
@@ -37,25 +38,19 @@ trackPtCut=1
 for mass in dFrames:
     print("d1")
     # it's more efficient to define ntracks before the loop, right?
-    print("d2")
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
-    print("d3")
-    filteredFrame=dFrames[mass].Define("nTracks", "Tracks.size()")
-    print("d3a")
-    filteredFrame=filteredFrame.Define("cutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht")
-    print("d3b")
-    filteredFrame=filteredFrame.Filter("cutHT>500")
-    print("d3c")
-    #filteredFrame = filteredFrame.Define("trackMagnitudes", "vector<double> trackmags; for (int i=0; i<nTracks; i++)  trackmags.push_back(sqrt(Tracks[i].Mag2())); return trackmags;")
-    filteredFrame = filteredFrame.Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;")
-    filteredFrame = filteredFrame.Define("denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;")
-    filteredFrame = filteredFrame.Define("sphericityTensor", "TMatrixDSym s(3,3); TArrayD array(9); for (int i=0; i<9; i++) array[i]=0; s.SetMatrixArray(array.GetArray()); for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracks[i].Mag2())*denominator));}}} return s;")
-    filteredFrame = filteredFrame.Define("eigenVals", "TMatrixDSymEigen eigen(sphericityTensor); return eigen.GetEigenValues();")
-    filteredFrame = filteredFrame.Define("C", "return 3*(eigenVals[0]*eigenVals[1]+eigenVals[0]*eigenVals[2]+eigenVals[1]*eigenVals[2]);")
-    filteredFrame = filteredFrame.Define("D","return 27*eigenVals[0]*eigenVals[1]*eigenVals[2];")
+    filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
+        .Define("cutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
+        .Filter("cutHT>500") \
+        .Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
+        .Define("denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
+        .Define("sphericityTensor", "TMatrixDSym s(3,3); TArrayD array(9); for (int i=0; i<9; i++) array[i]=0; s.SetMatrixArray(array.GetArray()); for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (momenta[i][j]*momenta[i][k]/(sqrt(Tracks[i].Mag2())*denominator));}}} return s;") \
+        .Define("eigenVals", "TMatrixDSymEigen eigen(sphericityTensor); return eigen.GetEigenValues();") \
+        .Define("C", "return 3*(eigenVals[0]*eigenVals[1]+eigenVals[0]*eigenVals[2]+eigenVals[1]*eigenVals[2]);") \
+        .Define("D","return 27*eigenVals[0]*eigenVals[1]*eigenVals[2];")
     print("d4")
-    cHists[mass] = filteredFrame.Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone()
-    dHists[mass] = filteredFrame.Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone()
+    cHists[mass] = filteredFrames[mass].Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone()
+    dHists[mass] = filteredFrames[mass].Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone()
     print("d5")
 print("e")
 
