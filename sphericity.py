@@ -19,7 +19,7 @@ fnames = [
 ]
 print("c")
 dFrames = {}
-filteredFrames[mass]s = {}
+filteredFrames[mass] = {}
 cHists = {}
 dHists = {}
 
