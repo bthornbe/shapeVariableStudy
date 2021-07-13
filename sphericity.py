@@ -36,7 +36,7 @@ for fname in fnames:
     print (dFrames[mass].Count().GetValue())
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
-    '''filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
+    filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") '''
         .Define("cutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("cutHT>500") \
         .Define("momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
@@ -51,7 +51,7 @@ for fname in fnames:
     #cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
     models[mass + "D"] = ROOT.RDF.TH1DModel("D" + mass, mass, 50, 0., 1.)
     #dHists[mass] = filteredFrames[mass].Histo1D(models[mass + "D"], "D").Clone("cloneD"+mass)
-    cHists[mass] =dFrames[mass].Histo1D(models[mass + "D"], "HT").Clone("cloneD"+mass)
+    cHists[mass] =filteredFrames[mass].Histo1D(models[mass + "D"], "HT").Clone("cloneD"+mass)
     print("d5")
 print("e")
 
