@@ -51,7 +51,7 @@ for fname in fnames:
     #cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
     models[mass + "D"] = ROOT.RDF.TH1DModel("D" + mass, mass, 50, 0., 1.)
     #dHists[mass] = filteredFrames[mass].Histo1D(models[mass + "D"], "D").Clone("cloneD"+mass)
-    cHists[mass] =filteredFrames[mass].Histo1D(models[mass + "C"], "C").Clone("cloneD"+mass)
+    cHists[mass] =filteredFrames[mass].Histo1D(models[mass + "C"], "momenta [0]").Clone("cloneD"+mass)
     print("d5")
 print("e")
 
