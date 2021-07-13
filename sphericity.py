@@ -23,19 +23,13 @@ filteredFrames = {}
 cHists = {}
 dHists = {}
 
+trackPtCut=1
+
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
-print("d")
-#currently not used:
-#weights={"mMed-125": 34.8, "mMed-400":5.9, "mMed-750": 0.5, "mMed-1000": 0.17}
-#find a way to use this:
-
-trackPtCut=1
-
-for mass in dFrames:
     print("d1")
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
