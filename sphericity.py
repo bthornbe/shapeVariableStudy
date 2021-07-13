@@ -2,6 +2,9 @@
 
 import ROOT
 
+import gc
+gc.disable()
+
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
 ROOT.ROOT.EnableImplicitMT()#enables multi-threading
