@@ -40,7 +40,7 @@ for fname in fnames:
         .Define("CutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
         .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
-        .Define("Val", "return Momenta[0][0]") \
+        .Define("Val", "return (Momenta[0][0])") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor", "TMatrixDSym s(3,3); TArrayD array(9); for (int i=0; i<9; i++) array[i]=0; s.SetMatrixArray(array.GetArray()); for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (Momenta[i][j]*Momenta[i][k]/(sqrt(Tracks[i].Mag2())*Denominator));}}} return s;") \
         .Define("EigenVals", "TMatrixDSymEigen eigen(SphericityTensor); return eigen.GetEigenValues();") \
