@@ -22,6 +22,7 @@ dFrames = {}
 filteredFrames = {}
 cHists = {}
 dHists = {}
+models = {}
 
 trackPtCut=1
 
@@ -45,8 +46,10 @@ for fname in fnames:
         .Define("D","return 27*eigenVals[0]*eigenVals[1]*eigenVals[2];")
     print(filteredFrames[mass].Count().GetValue())
     print("d4")
-    cHists[mass] = filteredFrames[mass].Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone("cloneC"+mass)
-    dHists[mass] = filteredFrames[mass].Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone("cloneD"+mass)
+    models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass,mass, 50, 0., 1.)
+    cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
+    models[mass + "D"] = ROOT.RDF.TH1DModel("D" + mass, mass, 50, 0., 1.)
+    dHists[mass] = filteredFrames[mass].Histo1D(models[mass + "D"], "D").Clone("cloneD"+mass)
     print("d5")
 print("e")
 
