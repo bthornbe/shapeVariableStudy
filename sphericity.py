@@ -44,6 +44,7 @@ for fname in fnames:
         .Define("SphericityTensor", "TMatrixDSym s(3,3); TArrayD array(9); for (int i=0; i<9; i++) array[i]=0; s.SetMatrixArray(array.GetArray()); for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (Momenta[i][j]*Momenta[i][k]/(sqrt(Tracks[i].Mag2())*Denominator));}}} return s;") \
         .Define("EigenVals", "TMatrixDSymEigen eigen(SphericityTensor); return eigen.GetEigenValues();") \
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
+        .Define("Val", "return Eigenvals[0]") \
         .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];")
     #print(filteredFrames[mass].Count().GetValue())
     print("d4")
@@ -51,7 +52,7 @@ for fname in fnames:
     #cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
     models[mass + "D"] = ROOT.RDF.TH1DModel("D" + mass, mass, 50, 0., 1.)
     #dHists[mass] = filteredFrames[mass].Histo1D(models[mass + "D"], "D").Clone("cloneD"+mass)
-    cHists[mass] =filteredFrames[mass].Histo1D(models[mass + "C"], "C").Clone("cloneC"+mass)
+    cHists[mass] =filteredFrames[mass].Histo1D(models[mass + "Val"], "C").Clone("cloneC"+mass)
     print("d5")
 print("e")
 
