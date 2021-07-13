@@ -49,8 +49,8 @@ for mass in dFrames:
         .Define("C", "return 3*(eigenVals[0]*eigenVals[1]+eigenVals[0]*eigenVals[2]+eigenVals[1]*eigenVals[2]);") \
         .Define("D","return 27*eigenVals[0]*eigenVals[1]*eigenVals[2];")
     print("d4")
-    cHists[mass] = filteredFrames[mass].Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone()
-    dHists[mass] = filteredFrames[mass].Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone()
+    cHists[mass] = filteredFrames[mass].Histo1D(("C"+mass,mass, 50, 0., 1.), "C").Clone("cloneC"+mass)
+    dHists[mass] = filteredFrames[mass].Histo1D(("D" + mass, mass, 50, 0., 1.), "D").Clone("cloneD"+mass)
     print("d5")
 print("e")
 
