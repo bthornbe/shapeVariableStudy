@@ -1,4 +1,4 @@
-# make a histogram of sphericity
+# make a histogram of shape variables that use the sphericity tensor
 
 import ROOT
 
