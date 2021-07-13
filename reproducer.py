@@ -6,7 +6,8 @@ fullname = "root://cmsxrootd.fnal.gov//store/user/kdipetri/SUEP/Production_v0.2/
 
 tname = "TreeMaker2/PreSelection"
 
-dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("Momenta",
+dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
+    .Define("Momenta",
             "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
     .Define("Val", "return (Momenta[0][0])")
 
