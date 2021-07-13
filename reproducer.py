@@ -15,8 +15,8 @@ dFrame3 = dFrame2.Define("CutHT",
             "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht")
 dFrame4 = dFrame3.Filter("CutHT>500")
 dFrame5 = dFrame4.Define("Momenta",
-            "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
-    dFrame6 = dFrame5.Define("Val", "return (Momenta[0][0])")
+            "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;")
+dFrame6 = dFrame5.Define("Val", "return (Momenta[0][0])")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, 0., 1.)
 cHist = dFrame6.Histo1D(model, "Val")
