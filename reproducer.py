@@ -16,15 +16,10 @@ filteredFrame= dFrame.Define("nTracks", "Tracks.size()") \
     .Filter("CutHT>500") \
     .Define("Momenta",
             "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
-    .Define("Denominator",
-            "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
-    .Define("SphericityTensor",
-            "TMatrixDSym s(3,3); TArrayD array(9); for (int i=0; i<9; i++) array[i]=0; s.SetMatrixArray(array.GetArray()); for (int i=0; i<nTracks; i++) { for (int j=0; j<3; j++) {for (int k=0; k<3; k++) {s[j][k]+= (Momenta[i][j]*Momenta[i][k]/(sqrt(Tracks[i].Mag2())*Denominator));}}} return s;") \
-    .Define("EigenVals", "TMatrixDSymEigen eigen(SphericityTensor); return eigen.GetEigenValues();") \
-    .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
+    .Define("Val", "return (Momenta[0][0])")
 
-model = ROOT.RDF.TH1DModel("C", "C", 50, 0., 1.)
-cHist = filteredFrame.Histo1D(model, "C")
+model = ROOT.RDF.TH1DModel("Val", "Val", 50, 0., 1.)
+cHist = filteredFrame.Histo1D(model, "Val")
 
 can = ROOT.TCanvas("canName", "canTitle")
 file = ROOT.TFile('hists', 'RECREATE')
