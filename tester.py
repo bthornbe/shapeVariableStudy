@@ -11,6 +11,6 @@ hist = dFrame.Histo1D(("nTracks", "nTrackstitle", 50, 0., 1.), "nTracks")
 
 can = ROOT.TCanvas("canName", "canTitle")
 
-hist.Draw()
-can.Draw()
+hist.Draw("hist")
+
 can.SaveAs("nTracksTesterPlot.pdf")
