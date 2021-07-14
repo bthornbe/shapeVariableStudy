@@ -1,4 +1,4 @@
-# a minimal reproducer for the error in sphericity.py
+# a minimal reproducer for the error in sphericity.py - fixed now! that particular error, that is.
 
 import ROOT
 

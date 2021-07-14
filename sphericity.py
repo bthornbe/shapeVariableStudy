@@ -35,7 +35,7 @@ for fname in fnames:
     print("d1")
     print (dFrames[mass].Count().GetValue())
     mystring= \
-    '''TMatrixDSym s(3); 
+    '''
     TArrayD array(9);   
     for (int i=0; i<nTracks; i++) { 
         for (int j=0; j<3; j++) {
@@ -44,7 +44,7 @@ for fname in fnames:
             }
         }
     } 
-    s.SetMatrixArray(array.GetArray());
+    TMatrixDSym s(3, array.GetArray());
     return s;
     '''
     # it's more efficient to define ntracks before the loop, right?
