@@ -4,19 +4,19 @@ fullname = "root://cmsxrootd.fnal.gov//store/user/kdipetri/SUEP/Production_v0.2/
 
 tname = "TreeMaker2/PreSelection"
 
-    mystring= \
-    '''
-    TArrayD array(9);   
-    for (int i=0; i<nTracks; i++) { 
-        for (int j=0; j<3; j++) {
-            for (int k=0; k<3; k++) {
-                array[j+3*k] += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
-            }
+mystring= \
+'''
+TArrayD array(9);   
+for (int i=0; i<nTracks; i++) { 
+    for (int j=0; j<3; j++) {
+        for (int k=0; k<3; k++) {
+            array[j+3*k] += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
         }
-    } 
-    TMatrixDSym s(3, array.GetArray());
-    return s;
-    '''
+    }
+} 
+TMatrixDSym s(3, array.GetArray());
+return s;
+'''
 dFrame= ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
         .Filter("nTracks > 0") \
         .Define("CutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
