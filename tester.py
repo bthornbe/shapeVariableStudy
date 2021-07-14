@@ -6,8 +6,8 @@ tname = "TreeMaker2/PreSelection"
 
 dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()")
 
-model = ROOT.RDF.TH1DModel("Val", "Val", 50, 0., 1.)
-hist = dFrame.Histo1D(model, "Val")
+model = ROOT.RDF.TH1DModel("nTracks", "nTracks", 50, 0., 1.)
+hist = dFrame.Histo1D(model, "nTracks")
 
 can = ROOT.TCanvas("canName", "canTitle")
 
