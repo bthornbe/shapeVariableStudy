@@ -9,7 +9,7 @@ tname = "TreeMaker2/PreSelection"
 dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
     .Filter("nTracks > 0") \
     .Define("Momenta",
-            "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
+            "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p[i].emplace_back()Tracks[i].x()); p[i].emplace_back(Tracks[i].y()); p[i].emplace_back(Tracks[i].z());} return p;") \
     .Define("Val", "return (Momenta.at(0).at(0))")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, -1000., 1000.)
