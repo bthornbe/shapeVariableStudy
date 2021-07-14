@@ -37,6 +37,7 @@ for fname in fnames:
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
     filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
+        .Filter("nTracks > 0") \
         .Define("CutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
         .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
