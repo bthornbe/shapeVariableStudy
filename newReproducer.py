@@ -6,7 +6,7 @@ tname = "TreeMaker2/PreSelection"
 
 mystring= \
 '''
-vector<vector<double>> s(3, vector<int>(3, 0));   
+vector<vector<double>> s{{0,0,0}{0,0,0}{0,0,0}};   
 for (int i=0; i<nTracks; i++) { 
     for (int j=0; j<3; j++) {
         for (int k=0; k<3; k++) {
