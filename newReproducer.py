@@ -6,15 +6,14 @@ tname = "TreeMaker2/PreSelection"
 
 mystring= \
 '''
-TArrayD array(9);   
+vector<vector<double>> s(3, vector<int>(3, 0));   
 for (int i=0; i<nTracks; i++) { 
     for (int j=0; j<3; j++) {
         for (int k=0; k<3; k++) {
-            array[j+3*k] += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
+            s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
         }
     }
 } 
-TMatrixDSym s(3, array.GetArray());
 return s;
 '''
 dFrame= ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
