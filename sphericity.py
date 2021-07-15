@@ -29,7 +29,7 @@ trackPtCut=1
 
 tensorString = \
     '''
-    vector<vector<double>> s(3, vector<int>(3, 0));   
+    vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
     for (int i=0; i<nTracks; i++) 
     { 
         for (int j=0; j<3; j++) 
@@ -45,7 +45,7 @@ tensorString = \
 
 eigenString = \
 '''
-double* a = SphericityTensor.data()
+double* a = SphericityTensor.data();
 TMatrixDSym s(3, a);
 TMatrixDSymEigen eigen(s); return eigen.GetEigenValues();
 '''
