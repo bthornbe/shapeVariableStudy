@@ -6,7 +6,7 @@ tname = "TreeMaker2/PreSelection"
 
 mystring= \
 '''
-TArrayD array(9,[0,0,0,0,0,0,0,0,0]);   
+TArrayD array(9);   
 for (int i=0; i<nTracks; i++) { 
     for (int j=0; j<3; j++) {
         for (int k=0; k<3; k++) {
