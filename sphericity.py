@@ -45,7 +45,14 @@ tensorString = \
 
 eigenString = \
 '''
-double* a[3][3] = SphericityTensor.data();
+double* a[3][3];
+for (int i = 0; i < 3; i++)
+{
+    for (int j = 0; j < 3; j++)
+    {
+        a[i][j] = SpericityTensor.at(i).at(j);
+    }
+}
 TMatrixDSym s(3, a);
 TMatrixDSymEigen eigen(s); return eigen.GetEigenValues();
 '''
