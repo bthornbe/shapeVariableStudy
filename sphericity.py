@@ -45,12 +45,12 @@ tensorString = \
 
 eigenString = \
 '''
-double* a[3][3];
+double a[3][3];
 for (int i = 0; i < 3; i++)
 {
     for (int j = 0; j < 3; j++)
     {
-        a[i][j] = SpericityTensor.at(i).at(j);
+        a[i][j] = SphericityTensor.at(i).at(j);
     }
 }
 TMatrixDSym s(3, a);
