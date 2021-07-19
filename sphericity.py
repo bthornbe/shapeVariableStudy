@@ -25,7 +25,7 @@ cHists = {}
 dHists = {}
 models = {}
 
-trackPtCut=1
+trackPtCut = 1
 
 tensorString = \
     '''
