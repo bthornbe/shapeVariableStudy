@@ -20,6 +20,8 @@ dFrames = {}
 filteredFrames = {}
 cHists = {}
 dHists = {}
+lHists = {}
+sHists = {}
 models = {}
 
 trackPtCut = 1
@@ -129,6 +131,10 @@ for fname in fnames:
     cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
     models[mass + "D"] = ROOT.RDF.TH1DModel("D" + mass, mass, 50, 0., 1.)
     dHists[mass] = filteredFrames[mass].Histo1D(models[mass + "D"], "D").Clone("cloneD"+mass)
+    models[mass + "L"] = ROOT.RDF.TH1DModel("L" + mass, mass, 50, 0., 1.)
+    lHists[mass] = filteredFrames[mass].Histo1D(models[mass + "L"], "LambdaMax").Clone("cloneL" + mass)
+    models[mass + "S"] = ROOT.RDF.TH1DModel("S" + mass, mass, 50, 0., 1.)
+    sHists[mass] = filteredFrames[mass].Histo1D(models[mass + "S"], "Sphericity").Clone("cloneS" + mass)
 
     print("d5")
 print("e")
