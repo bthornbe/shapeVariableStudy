@@ -43,7 +43,7 @@ dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()"
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor", myString) \
         .Define("EigenVals", eigenString) \
-        .Define("Val", "return (EigenVals[0])")
+        .Define("Val", "return (EigenVals.at(0))")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, -1000., 1000.)
 hist = dFrame.Histo1D(model, "Val")
