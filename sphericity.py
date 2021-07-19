@@ -124,7 +124,7 @@ for fname in fnames:
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
         .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
         .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max") \
-        .Define("EigenVals2",eigenString2)
+        .Define("EigenVals2",eigenString2) \
         .Define("Sphericity", "return ")# the nTracks cut is probably unnecessary
     #print(filteredFrames[mass].Count().GetValue())
     print("d4")
