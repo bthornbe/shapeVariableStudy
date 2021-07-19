@@ -42,8 +42,8 @@ dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()"
         .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor", myString) \
-        .Define("Val", "return (SphericityTensor[0][0])") \
         .Define("EigenVals", eigenString) \
+        .Define("Val", "return (EigenVals[0])")
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, -1000., 1000.)
 hist = dFrame.Histo1D(model, "Val")
