@@ -122,7 +122,7 @@ for fname in fnames:
         .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
         .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max") \
         .Define("EigenVals2",eigenString2) \
-        .Define("Sphericity", "return ")# the nTracks cut is probably unnecessary
+        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# the nTracks cut is probably unnecessary
     #print(filteredFrames[mass].Count().GetValue())
     print("d4")
     models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass, mass, 50, 0., 1.)
