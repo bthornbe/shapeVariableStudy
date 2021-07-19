@@ -1,9 +1,6 @@
 # make a histogram of shape variables that use the sphericity tensor
 
 import ROOT
-import cms_style
-
-cms_style.setTDRStyle()
 
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
