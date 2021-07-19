@@ -20,7 +20,22 @@ myString = \
     return s;
     '''
 
-dFrame= ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
+eigenString = \
+'''
+double a[9];
+for (int i = 0; i < 3; i++)
+{
+    for (int j = 0; j < 3; j++)
+    {
+        a[i+3*j] = SphericityTensor.at(i).at(j);
+    }
+}
+TMatrixDSym s(3, a);
+TMatrixDSymEigen eigen(s); 
+return eigen.GetEigenValues();
+'''
+
+dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
         .Filter("nTracks > 0") \
         .Define("CutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
@@ -28,7 +43,7 @@ dFrame= ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()")
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor", myString) \
         .Define("Val", "return (SphericityTensor[0][0])") \
-
+        .Define("EigenVals", eigenString) \
 
 model = ROOT.RDF.TH1DModel("Val", "Val", 50, -1000., 1000.)
 hist = dFrame.Histo1D(model, "Val")

@@ -54,7 +54,8 @@ for (int i = 0; i < 3; i++)
     }
 }
 TMatrixDSym s(3, a);
-TMatrixDSymEigen eigen(s); return eigen.GetEigenValues();
+TMatrixDSymEigen eigen(s); 
+return eigen.GetEigenValues();
 '''
 
 for fname in fnames:
