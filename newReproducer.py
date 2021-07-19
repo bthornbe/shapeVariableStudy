@@ -32,7 +32,8 @@ for (int i = 0; i < 3; i++)
 }
 TMatrixDSym s(3, a);
 TMatrixDSymEigen eigen(s); 
-return eigen.GetEigenValues();
+TVectorD eigenValues = eigen.GetEigenValues();
+return eigenValues;
 '''
 
 dFrame = ROOT.ROOT.RDataFrame(tname, fullname).Define("nTracks", "Tracks.size()") \
