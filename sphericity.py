@@ -42,6 +42,22 @@ tensorString = \
     } 
     return s;
     '''
+# sphericity tensor for r=2, used for sphericity:
+otherTensorString = \
+    '''
+    vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
+    for (int i=0; i<nTracks; i++) 
+    { 
+        for (int j=0; j<3; j++) 
+        {
+            for (int k=0; k<3; k++) 
+            {
+                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/Denominator2;
+            }
+        }
+    } 
+    return s;
+    '''
 
 eigenString = \
 '''
@@ -50,7 +66,28 @@ for (int i = 0; i < 3; i++)
 {
     for (int j = 0; j < 3; j++)
     {
-        a[i+3*j] = SphericityTensor.at(i).at(j);
+        a[i+3*j] = SphericityTensor1.at(i).at(j);
+    }
+}
+TMatrixDSym s(3, a);
+TMatrixDSymEigen eigen(s); 
+TVectorD eigenVals = eigen.GetEigenValues();
+vector <double> eigenVals2;
+for (int i = 0; i < 3; i++)
+{
+        eigenVals2.push_back(eigenVals[i]);
+}
+return eigenVals2;
+'''
+
+eigenString2 = \
+'''
+double a[9];
+for (int i = 0; i < 3; i++)
+{
+    for (int j = 0; j < 3; j++)
+    {
+        a[i+3*j] = SphericityTensor2.at(i).at(j);
     }
 }
 TMatrixDSym s(3, a);
@@ -80,11 +117,15 @@ for fname in fnames:
         .Filter("CutHT>500") \
         .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
-        .Define("SphericityTensor", tensorString) \
+        .Define("SphericityTensor1", tensorString) \
+        .Define("Denominator2", "double denom=0; for (int i=0; i<nTracks; i++) denom += Tracks[i].Mag2(); return denom;") \
+        .Define("SphericityTensor2", otherTensorString) \
         .Define("EigenVals", eigenString) \
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
         .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
-        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max")# the nTracks cut is probably unnecessary
+        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max") \
+        .Define("EigenVals2",eigenString2)
+        .Define("Sphericity", "return ")# the nTracks cut is probably unnecessary
     #print(filteredFrames[mass].Count().GetValue())
     print("d4")
     models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass, mass, 50, 0., 1.)
