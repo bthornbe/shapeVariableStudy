@@ -55,7 +55,13 @@ for (int i = 0; i < 3; i++)
 }
 TMatrixDSym s(3, a);
 TMatrixDSymEigen eigen(s); 
-return eigen.GetEigenValues();
+TVectorD eigenVals = eigen.GetEigenValues();
+vector <double> eigenVals2;
+for (int i = 0; i < 3; i++)
+{
+        eigenVals2.push_back(eigenVals[i]);
+}
+return eigenVals2;
 '''
 
 for fname in fnames:
