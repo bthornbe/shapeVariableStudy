@@ -32,7 +32,7 @@ for (int i = 0; i < 3; i++)
 }
 TMatrixDSym s(3, a);
 TMatrixDSymEigen eigen(s); 
-vector <double> eigenValues = eigen.GetEigenValues();
+TVectorD eigenValues = eigen.GetEigenValues();
 return eigenValues;
 '''
 
