@@ -81,10 +81,10 @@ for fname in fnames:
         .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor", tensorString) \
-        .Define("Val", "return (SphericityTensor[0][0])") \
         .Define("EigenVals", eigenString) \
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
-        .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") # the nTracks cut is probably unnecessary
+        .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
+        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max")# the nTracks cut is probably unnecessary
     #print(filteredFrames[mass].Count().GetValue())
     print("d4")
     models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass, mass, 50, 0., 1.)
