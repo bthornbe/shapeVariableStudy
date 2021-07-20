@@ -24,7 +24,7 @@ models = {}
 
 trackPtCut = 1
 
-tensorString = \
+tensorString1 = \
     '''
     vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
     for (int i=0; i<nPassingTracks; i++) 
@@ -90,15 +90,9 @@ for fname in fnames:
         .Define("Momenta",
                 "vector<vector<double>> p; for (int i=0; i<nPassingTracks; i++) {p.emplace_back(); p[i].push_back(PassingTracks[i].x()); p[i].push_back(PassingTracks[i].y()); p[i].push_back(PassingTracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
-        .Define("SphericityTensor1", tensorString) \
-        .Define("Denominator2", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += PassingTracks[i].Mag2(); return denom;") \
-        .Define("SphericityTensor2", otherTensorString) \
+        .Define("SphericityTensor1", tensorString1) \
         .Define("EigenVals", eigenString) \
-        .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
-        .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
-        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max") \
-        .Define("EigenVals2",eigenString2) \
-        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# the nTracks cut is probably unnecessary
+        .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));")
 
     models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass, mass, 50, 0., 1.)
     cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
