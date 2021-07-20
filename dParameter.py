@@ -101,7 +101,7 @@ hists["mMed-400"].SetLineColor(3)
 hists["mMed-750"].SetLineColor(4)
 hists["mMed-1000"].SetLineColor(6)
 
-hists["mMed-125"].SetMaximum(1300)
+hists["mMed-125"].SetMaximum(600)
 hists["mMed-125"].Draw("hist")
 hists["mMed-400"].Draw("same")
 hists["mMed-750"].Draw("same")
