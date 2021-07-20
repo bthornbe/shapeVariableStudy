@@ -91,7 +91,7 @@ for fname in fnames:
                 "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor1", tensorString1) \
         .Define("EigenVals", eigenString) \
-        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max")
+        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++){if (EigenVals[i] > max){ max = EigenVals[i];}} return max")
 
     models[mass] = ROOT.RDF.TH1DModel(mass, mass, 50, 0., 1.)
     hists[mass] = filteredFrames[mass].Histo1D(models[mass], "LambdaMax").Clone("cloneL" + mass)
