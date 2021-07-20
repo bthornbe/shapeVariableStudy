@@ -111,7 +111,7 @@ for (int i = 0; i < nTracks; i ++)
     if (Tracks[i].Perp2() > ''' + str(trackPtCut**2) + ''' && abs(Tracks[i].Eta()) < 2.5 && Tracks_fromPV0[i] >=2  && Tracks_matchedToPFCandidate[i]) 
         passTracks.push_back(Tracks[i]);
 } 
-return passTracks;")")
+return passTracks;
 '''
 
 for fname in fnames:
