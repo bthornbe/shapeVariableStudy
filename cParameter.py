@@ -4,7 +4,6 @@ import ROOT
 import cms_style
 cms_style.setTDRStyle()
 
-print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
 
 floc = "/store/user/kdipetri/SUEP/Production_v0.2/2018/NTUP/"
