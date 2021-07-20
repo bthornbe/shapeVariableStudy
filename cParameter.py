@@ -6,10 +6,7 @@ cms_style.setTDRStyle()
 
 print("a")
 ROOT.gROOT.SetBatch(1)#don't show graphics
-#ROOT.ROOT.EnableImplicitMT()#enables multi-threading
-#ROOT.ROOT. DisableImplicitMT()
 
-print("b")
 floc = "/store/user/kdipetri/SUEP/Production_v0.2/2018/NTUP/"
 fnames = [
     "PrivateSamples.SUEP_2018_mMed-125_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
@@ -17,7 +14,6 @@ fnames = [
     "PrivateSamples.SUEP_2018_mMed-750_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
 
-print("c")
 dFrames = {}
 filteredFrames = {}
 cHists = {}
@@ -38,22 +34,6 @@ tensorString = \
             for (int k=0; k<3; k++) 
             {
                 s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
-            }
-        }
-    } 
-    return s;
-    '''
-# sphericity tensor for r=2, used for sphericity:
-otherTensorString = \
-    '''
-    vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
-    for (int i=0; i<nTracks; i++) 
-    { 
-        for (int j=0; j<3; j++) 
-        {
-            for (int k=0; k<3; k++) 
-            {
-                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/Denominator2;
             }
         }
     } 
@@ -81,52 +61,19 @@ for (int i = 0; i < 3; i++)
 return eigenVals2;
 '''
 
-eigenString2 = \
-'''
-double a[9];
-for (int i = 0; i < 3; i++)
-{
-    for (int j = 0; j < 3; j++)
-    {
-        a[i+3*j] = SphericityTensor2.at(i).at(j);
-    }
-}
-TMatrixDSym s(3, a);
-TMatrixDSymEigen eigen(s); 
-TVectorD eigenVals = eigen.GetEigenValues();
-vector <double> eigenVals2;
-for (int i = 0; i < 3; i++)
-{
-        eigenVals2.push_back(eigenVals[i]);
-}
-return eigenVals2;
-'''
-passTrackString = \
-'''
-"auto passTracks = Tracks; passTracks.clear(); for (int i=0; i<nTracks; i++) {if (TrackPtSquared[i] >" + str(trackPtCut**2) + " && abs(Tracks[i].Eta())<2.5 && Tracks_fromPV0[i]>=2 && Tracks_matchedToPFCandidate[i]) ftracks++;} return ftracks;")") \
-        
-'''
-
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
-    print("d1")
-    print (dFrames[mass].Count().GetValue())
 
-    # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
     filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
         .Filter("nTracks > 0") \
-        .Define("CutHT",
-                "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
+        .Define("CutHT", "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
-        .Define("TrackPtSquared",
-                "vector<double> trptsq; for (int i=0; i<nTracks; i++)  trptsq.push_back(Tracks[i].Perp2()); return trptsq;") \
-        .Define("PassingTracks", passTrackString)
-        .Define("Momenta",
-                "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
+    #cut on tracks
+        .Define("Momenta", "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor1", tensorString) \
         .Define("Denominator2", "double denom=0; for (int i=0; i<nTracks; i++) denom += Tracks[i].Mag2(); return denom;") \
