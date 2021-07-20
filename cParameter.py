@@ -16,13 +16,11 @@ fnames = [
 dFrames = {}
 filteredFrames = {}
 cHists = {}
-dHists = {}
-lHists = {}
-sHists = {}
 models = {}
 
 trackPtCut = 1
 
+# creates the sphericity tensor with r=1, as used for C, D, and LamdaMax:
 tensorString1 = \
     '''
     vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
@@ -93,22 +91,21 @@ for fname in fnames:
         .Define("EigenVals", eigenString) \
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));")
 
-    models[mass+"C"] = ROOT.RDF.TH1DModel("C"+mass, mass, 50, 0., 1.)
-    cHists[mass] = filteredFrames[mass].Histo1D(models[mass+"C"], "C").Clone("cloneC"+mass)
+    models[mass] = ROOT.RDF.TH1DModel(mass, mass, 50, 0., 1.)
+    cHists[mass] = filteredFrames[mass].Histo1D(models[mass], "C").Clone("cloneC"+mass)
 
 can = ROOT.TCanvas("canName", "canTitle")
-file = ROOT.TFile('hists', 'RECREATE')
-cHists["mMed-125"].Write()
 
 cHists["mMed-125"].SetLineColor(2)
 cHists["mMed-400"].SetLineColor(3)
 cHists["mMed-750"].SetLineColor(4)
 cHists["mMed-1000"].SetLineColor(6)
 
-cHists["mMed-1000"].Draw("hist")
-cHists["mMed-125"].Draw("same")
+cHists["mMed-125"].SetMaximum(1300)
+cHists["mMed-125"].Draw("hist")
 cHists["mMed-400"].Draw("same")
 cHists["mMed-750"].Draw("same")
+cHists["mMed-1000"].Draw("same")
 
 leg = ROOT.TLegend(.66, .64, .8, .88)
 
