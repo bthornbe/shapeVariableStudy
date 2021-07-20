@@ -31,13 +31,13 @@ trackPtCut = 1
 tensorString = \
     '''
     vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
-    for (int i=0; i<nTracks; i++) 
+    for (int i=0; i<nPassingTracks; i++) 
     { 
         for (int j=0; j<3; j++) 
         {
             for (int k=0; k<3; k++) 
             {
-                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(Tracks[i].Mag2())*Denominator);
+                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(PassingTracks[i].Mag2())*Denominator);
             }
         }
     } 
@@ -47,7 +47,7 @@ tensorString = \
 otherTensorString = \
     '''
     vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
-    for (int i=0; i<nTracks; i++) 
+    for (int i=0; i<nPassingTracks; i++) 
     { 
         for (int j=0; j<3; j++) 
         {
@@ -101,10 +101,17 @@ for (int i = 0; i < 3; i++)
 }
 return eigenVals2;
 '''
+trackPtCut = 1
 passTrackString = \
 '''
-"auto passTracks = Tracks; passTracks.clear(); for (int i=0; i<nTracks; i++) {if (TrackPtSquared[i] >" + str(trackPtCut**2) + " && abs(Tracks[i].Eta())<2.5 && Tracks_fromPV0[i]>=2 && Tracks_matchedToPFCandidate[i]) ftracks++;} return ftracks;")") \
-        
+auto passTracks = Tracks; 
+passTracks.clear(); 
+for (int i = 0; i < nTracks; i ++) 
+{
+    if (Tracks[i].Perp2() > ''' + str(trackPtCut**2) + ''' && abs(Tracks[i].Eta()) < 2.5 && Tracks_fromPV0[i] >=2  && Tracks_matchedToPFCandidate[i]) 
+        passTracks.push_back(Tracks[i]);
+} 
+return passTracks;")")
 '''
 
 for fname in fnames:
@@ -122,14 +129,13 @@ for fname in fnames:
         .Define("CutHT",
                 "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
-        .Define("TrackPtSquared",
-                "vector<double> trptsq; for (int i=0; i<nTracks; i++)  trptsq.push_back(Tracks[i].Perp2()); return trptsq;") \
-        .Define("PassingTracks", passTrackString)
+        .Define("PassingTracks", passTrackString) \
+        .Define("nPassingTracks", "PassingTracks.size()")
         .Define("Momenta",
-                "vector<vector<double>> p; for (int i=0; i<nTracks; i++) {p.emplace_back(); p[i].push_back(Tracks[i].x()); p[i].push_back(Tracks[i].y()); p[i].push_back(Tracks[i].z());} return p;") \
-        .Define("Denominator", "double denom=0; for (int i=0; i<nTracks; i++) denom += sqrt(Tracks[i].Mag2()); return denom;") \
+                "vector<vector<double>> p; for (int i=0; i<nPassingTracks; i++) {p.emplace_back(); p[i].push_back(PassingTracks[i].x()); p[i].push_back(PassingTracks[i].y()); p[i].push_back(PassingTracks[i].z());} return p;") \
+        .Define("Denominator", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor1", tensorString) \
-        .Define("Denominator2", "double denom=0; for (int i=0; i<nTracks; i++) denom += Tracks[i].Mag2(); return denom;") \
+        .Define("Denominator2", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += PassingTracks[i].Mag2(); return denom;") \
         .Define("SphericityTensor2", otherTensorString) \
         .Define("EigenVals", eigenString) \
         .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
