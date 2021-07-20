@@ -1,15 +1,12 @@
-# make a histogram of shape variables that use the sphericity tensor
+# make a histogram of sphericity
 
 import ROOT
 import cms_style
 cms_style.setTDRStyle()
 
-print("a")
-ROOT.gROOT.SetBatch(1)#don't show graphics
-#ROOT.ROOT.EnableImplicitMT()#enables multi-threading
-#ROOT.ROOT. DisableImplicitMT()
 
-print("b")
+ROOT.gROOT.SetBatch(1)#don't show graphics
+
 floc = "/store/user/kdipetri/SUEP/Production_v0.2/2018/NTUP/"
 fnames = [
     "PrivateSamples.SUEP_2018_mMed-125_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
@@ -17,7 +14,6 @@ fnames = [
     "PrivateSamples.SUEP_2018_mMed-750_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
 
-print("c")
 dFrames = {}
 filteredFrames = {}
 cHists = {}
@@ -28,23 +24,8 @@ models = {}
 
 trackPtCut = 1
 
-tensorString = \
-    '''
-    vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
-    for (int i=0; i<nPassingTracks; i++) 
-    { 
-        for (int j=0; j<3; j++) 
-        {
-            for (int k=0; k<3; k++) 
-            {
-                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(PassingTracks[i].Mag2())*Denominator);
-            }
-        }
-    } 
-    return s;
-    '''
 # sphericity tensor for r=2, used for sphericity:
-otherTensorString = \
+tensorString2 = \
     '''
     vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
     for (int i=0; i<nPassingTracks; i++) 
@@ -59,27 +40,6 @@ otherTensorString = \
     } 
     return s;
     '''
-
-eigenString = \
-'''
-double a[9];
-for (int i = 0; i < 3; i++)
-{
-    for (int j = 0; j < 3; j++)
-    {
-        a[i+3*j] = SphericityTensor1.at(i).at(j);
-    }
-}
-TMatrixDSym s(3, a);
-TMatrixDSymEigen eigen(s); 
-TVectorD eigenVals = eigen.GetEigenValues();
-vector <double> eigenVals2;
-for (int i = 0; i < 3; i++)
-{
-        eigenVals2.push_back(eigenVals[i]);
-}
-return eigenVals2;
-'''
 
 eigenString2 = \
 '''
@@ -119,8 +79,6 @@ for fname in fnames:
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
-    print("d1")
-    print (dFrames[mass].Count().GetValue())
 
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
@@ -133,14 +91,8 @@ for fname in fnames:
         .Define("nPassingTracks", "PassingTracks.size()") \
         .Define("Momenta",
                 "vector<vector<double>> p; for (int i=0; i<nPassingTracks; i++) {p.emplace_back(); p[i].push_back(PassingTracks[i].x()); p[i].push_back(PassingTracks[i].y()); p[i].push_back(PassingTracks[i].z());} return p;") \
-        .Define("Denominator", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
-        .Define("SphericityTensor1", tensorString) \
         .Define("Denominator2", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += PassingTracks[i].Mag2(); return denom;") \
-        .Define("SphericityTensor2", otherTensorString) \
-        .Define("EigenVals", eigenString) \
-        .Define("C", "return (3*(EigenVals[0]*EigenVals[1]+EigenVals[0]*EigenVals[2]+EigenVals[1]*EigenVals[2]));") \
-        .Define("D","return 27*EigenVals[0]*EigenVals[1]*EigenVals[2];") \
-        .Define("LambdaMax", "int max = 0; for (int i = 0; i < 3; i++)if (EigenVals[i] > max) max = EigenVals[i]; return max") \
+        .Define("SphericityTensor2", tensorString2) \
         .Define("EigenVals2",eigenString2) \
         .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# the nTracks cut is probably unnecessary
     #print(filteredFrames[mass].Count().GetValue())
