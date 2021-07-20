@@ -130,7 +130,7 @@ for fname in fnames:
                 "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
         .Define("PassingTracks", passTrackString) \
-        .Define("nPassingTracks", "PassingTracks.size()")
+        .Define("nPassingTracks", "PassingTracks.size()") \
         .Define("Momenta",
                 "vector<vector<double>> p; for (int i=0; i<nPassingTracks; i++) {p.emplace_back(); p[i].push_back(PassingTracks[i].x()); p[i].push_back(PassingTracks[i].y()); p[i].push_back(PassingTracks[i].z());} return p;") \
         .Define("Denominator", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
