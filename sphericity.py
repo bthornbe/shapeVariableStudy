@@ -26,15 +26,6 @@ bfnames = [
     "Autumn18.QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root"
 ]
 
-lum=135*1000
-xSecArr=[311900,29070,5962,1207,119.9,25.24]
-xSecs = {}
-dFrames = {}
-filteredFrames = {}
-hists = {}
-models = {}
-trackPtCut = 1
-
 # sphericity tensor for r=2, used for sphericity:
 tensorString2 = \
     '''
@@ -85,14 +76,24 @@ for (int i = 0; i < nTracks; i ++)
 return passTracks;
 '''
 
+lum=135*1000
+xSecArr=[311900,29070,5962,1207,119.9,25.24]
+xSecs = {}
+dFrames = {}
+filteredFrames = {}
+hists = {}
+models = {}
+trackPtCut = 1
+weights = {}
+
 for i, bfname in enumerate(bfnames):
     fullname = "root://cmsxrootd.fnal.gov/"+bfloc + bfname
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
-    xSecs [range] = xSecArr [i]
+    xSecs[range] = xSecArr[i]
     entries = dFrames[range].Count().Getvalue()
-    weight=xSecs[range]*lum/entries
+    weights[range] = xSecs[range]*lum/entries
 
 for fname in fnames:
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
