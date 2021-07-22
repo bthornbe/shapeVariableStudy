@@ -90,7 +90,7 @@ for i, bfname in enumerate(bfnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc + bfname
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
-    dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
+    dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", floc + bfname)
     xSecs[range] = xSecArr[i]
     entries = dFrames[range].Count().Getvalue()
     weights[range] = xSecs[range]*lum/entries
