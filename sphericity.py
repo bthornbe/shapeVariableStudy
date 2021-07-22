@@ -78,6 +78,7 @@ return passTracks;
 
 lum=135*1000
 xSecArr=[311900,29070,5962,1207,119.9,25.24]
+signalXSecs = [34.8, 5.9, 0.5, 0.17]
 xSecs = {}
 dFrames = {}
 filteredFrames = {}
@@ -87,7 +88,7 @@ trackPtCut = 1
 weights = {}
 
 for i, bfname in enumerate(bfnames):
-    fullname = "root://cmsxrootd.fnal.gov/"+bfloc + bfname
+    fullname = "root://cmseos.fnal.gov/ "+bfloc + bfname
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
