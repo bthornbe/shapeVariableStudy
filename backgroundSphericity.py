@@ -7,17 +7,8 @@ cms_style.setTDRStyle()
 
 ROOT.gROOT.SetBatch(1) # don't show graphics
 
-# simulated signal:
-floc = "/store/user/kdipetri/SUEP/Production_v0.2/2018/NTUP/"
+floc = "/eos/user/t/tholmes/public/SUEPs/"
 fnames = [
-    "PrivateSamples.SUEP_2018_mMed-125_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
-    "PrivateSamples.SUEP_2018_mMed-400_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
-    "PrivateSamples.SUEP_2018_mMed-750_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
-    "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
-
-# background:
-bfloc = "/eos/user/t/tholmes/public/SUEPs/"
-bfnames = [
     "Autumn18.QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
@@ -27,12 +18,23 @@ bfnames = [
 ]
 
 lum=135*1000
-xSecArr=[311900,29070,5962,1207,119.9,25.24]
-xSecs = {}
+xsec=[311900,29070,5962,1207,119.9,25.24]
+xsec2 = {}
+
 dFrames = {}
 filteredFrames = {}
-hists = {}
+bHist = {} #background histogram
+bHist["events"]=ROOT.TH1F("Data", "QCD Histogram", nbins, 0, maxX)
 models = {}
+
+trees = {}
+for k, fname in enumerate(fnames):
+    fullname = floc+fname
+    tname = "TreeMaker2/PreSelection"
+    Range = fname.split("_")[1]
+    trees[Range] = ROOT.ROOT.RDataFrame(tname, fullname)
+    xsec2[Range] = xsec[k]
+
 trackPtCut = 1
 
 # sphericity tensor for r=2, used for sphericity:
@@ -85,25 +87,16 @@ for (int i = 0; i < nTracks; i ++)
 return passTracks;
 '''
 
-for i, bfname in enumerate(bfnames):
-    fullname = bfloc + bfname
-    tname = "TreeMaker2/PreSelection"
-    range = bfname.split("_")[1]
-    dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
-    xSecs [range] = xSecArr [i]
-    entries = dFrames[range].Count().Getvalue()
-    weight=xSecs[range]*lum/entries
-
 for fname in fnames:
-    fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
+    fullname = "root://cmsxrootd.fnal.gov/"+floc+fname #change for background?
+
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
 
-for key in dFrames.getkeys:
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
-    filteredFrames[key]=dFrames[key].Define("nTracks", "Tracks.size()") \
+    filteredFrames[mass]=dFrames[mass].Define("nTracks", "Tracks.size()") \
         .Filter("nTracks > 0") \
         .Define("CutHT",
                 "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
@@ -115,28 +108,29 @@ for key in dFrames.getkeys:
         .Define("Denominator2", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += PassingTracks[i].Mag2(); return denom;") \
         .Define("SphericityTensor2", tensorString2) \
         .Define("EigenVals2",eigenString2) \
-        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# I'm fairly sure GetEigenValues sorts the output from highest to lowest
+        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# the nTracks cut is probably unnecessary
 
-    models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("cloneS" + key)
+    models[mass + "S"] = ROOT.RDF.TH1DModel("S" + mass, mass, 50, 0., 1.)
+    sHists[mass] = filteredFrames[mass].Histo1D(models[mass + "S"], "Sphericity").Clone("cloneS" + mass)
+    bHist["events"].Add()
 
 can = ROOT.TCanvas("canName", "canTitle")
 
-hists["mMed-125"].SetLineColor(2)
-hists["mMed-400"].SetLineColor(3)
-hists["mMed-750"].SetLineColor(4)
-hists["mMed-1000"].SetLineColor(6)
+sHists["mMed-125"].SetLineColor(2)
+sHists["mMed-400"].SetLineColor(3)
+sHists["mMed-750"].SetLineColor(4)
+sHists["mMed-1000"].SetLineColor(6)
 
-hists["mMed-125"].SetMaximum(1300)
-hists["mMed-125"].Draw("hist")
-hists["mMed-400"].Draw("same")
-hists["mMed-750"].Draw("same")
-hists["mMed-1000"].Draw("same")
+sHists["mMed-125"].SetMaximum(1300)
+sHists["mMed-125"].Draw("hist")
+sHists["mMed-400"].Draw("same")
+sHists["mMed-750"].Draw("same")
+sHists["mMed-1000"].Draw("same")
 
 leg = ROOT.TLegend(.66, .64, .8, .88)
 
-for key in hists.keys():
-    leg.AddEntry(hists[key], key, "l")
+for mass in sHists.keys():
+    leg.AddEntry(sHists[mass], mass, "l")
 leg.Draw()
 
 can.SaveAs("sphericityPlot.pdf")
