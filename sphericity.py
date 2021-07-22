@@ -16,7 +16,6 @@ fnames = [
     "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
 
 # background:
-bfloc = "/eos/user/t/tholmes/public/SUEPs/"
 bfnames = [
     "Autumn18.QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
@@ -88,7 +87,7 @@ trackPtCut = 1
 weights = {}
 
 for i, bfname in enumerate(bfnames):
-    fullname = "root://cmseos.fnal.gov/ "+bfloc + bfname
+    fullname = "root://cmsxrootd.fnal.gov/"+floc + bfname
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
