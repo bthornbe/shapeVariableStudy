@@ -86,7 +86,7 @@ return passTracks;
 '''
 
 for i, bfname in enumerate(bfnames):
-    fullname = bfloc + bfname
+    fullname = "root://cmsxrootd.fnal.gov/"+bfloc + bfname
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", bfloc + bfname)
