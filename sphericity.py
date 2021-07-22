@@ -76,9 +76,8 @@ return passTracks;
 '''
 
 lum=135*1000
-xSecArr=[311900,29070,5962,1207,119.9,25.24]
+xSecs=[311900,29070,5962,1207,119.9,25.24]
 signalXSecs = [34.8, 5.9, 0.5, 0.17]
-xSecs = {}
 dFrames = {}
 filteredFrames = {}
 hists = {}
@@ -91,17 +90,18 @@ for i, bfname in enumerate(bfnames):
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", floc + bfname)
-    xSecs[range] = xSecArr[i]
     entries = dFrames[range].Count().Getvalue()
-    weights[range] = xSecs[range]*lum/entries
+    weights[range] = xSecs[i]*lum/entries
 
-for fname in fnames:
+for i, fname in enumerate(fnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
+    entries = dFrames[mass].Count().Getvalue()
+    weights[mass] = signalXSecs[i] * lum / entries
 
-for key in dFrames.getkeys:
+for key in dFrames.keys():
     # it's more efficient to define ntracks before the loop, right?
     #find the HT the detector "sees" so that we can cut on that for l1 trigger:
     filteredFrames[key]=dFrames[key].Define("nTracks", "Tracks.size()") \
