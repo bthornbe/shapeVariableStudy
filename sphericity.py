@@ -14,7 +14,7 @@ fnames = [
     "PrivateSamples.SUEP_2018_mMed-400_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-750_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
-
+'''
 # background:
 bfnames = [
     "Autumn18.QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
@@ -23,7 +23,7 @@ bfnames = [
     "Autumn18.QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root"
-]
+]'''
 
 # sphericity tensor for r=2, used for sphericity:
 tensorString2 = \
@@ -84,7 +84,7 @@ hists = {}
 models = {}
 trackPtCut = 1
 weights = {}
-
+'''
 for i, bfname in enumerate(bfnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc + bfname
     tname = "TreeMaker2/PreSelection"
@@ -92,7 +92,7 @@ for i, bfname in enumerate(bfnames):
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", floc + bfname)
     entries = dFrames[range].Count().Getvalue()
     weights[range] = xSecs[i]*lum/entries
-
+'''
 for i, fname in enumerate(fnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
@@ -109,6 +109,7 @@ for key in dFrames.keys():
         .Define("CutHT",
                 "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
+        .Define("Weights", str(weights[key])) \
         .Define("PassingTracks", passTrackString) \
         .Define("nPassingTracks", "PassingTracks.size()") \
         .Define("Momenta",
@@ -119,7 +120,7 @@ for key in dFrames.keys():
         .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# I'm fairly sure GetEigenValues sorts the output from highest to lowest
 
     models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("cloneS" + key)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity", "Weights").Clone("cloneS" + key)
 
 can = ROOT.TCanvas("canName", "canTitle")
 
