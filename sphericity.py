@@ -120,12 +120,12 @@ for key in dFrames.keys():
         .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# I'm fairly sure GetEigenValues sorts the output from highest to lowest
 
     models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("cloneS" + key)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("S_" + key)
 
 can = ROOT.TCanvas("canName", "canTitle")
 
 file = ROOT.TFile('sphericityHists.root', 'RECREATE')
-for key in dFrames.keys:
+for key in hists:
     hists[key].Write()
 file.Close()
 
