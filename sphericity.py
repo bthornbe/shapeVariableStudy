@@ -91,15 +91,18 @@ for i, bfname in enumerate(bfnames):
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", fullname)
-    #entries = dFrames[range].Count().GetValue()
+    entries = dFrames[range].Count().GetValue()
+    print(entries)
     #weights[range] = xSecs[i]*lum/entries
 
 for i, fname in enumerate(fnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
+    print(fullname)
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
-    #entries = dFrames[mass].Count().GetValue()
+    entries = dFrames[mass].Count().GetValue()
+    print(entries)
     #weights[mass] = signalXSecs[i] * lum / entries
 
 for key in dFrames.keys():
