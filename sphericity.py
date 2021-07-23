@@ -109,7 +109,6 @@ for key in dFrames.keys():
         .Define("CutHT",
                 "double cutht=0; for (int i=0; i<Jets.size(); i++) if (Jets[i].Pt()>30 and abs(Jets[i].eta())<2.4) cutht+=Jets[i].Pt(); return cutht") \
         .Filter("CutHT>500") \
-        .Define("Weights", str(weights[key])) \
         .Define("PassingTracks", passTrackString) \
         .Define("nPassingTracks", "PassingTracks.size()") \
         .Define("Momenta",
@@ -120,7 +119,7 @@ for key in dFrames.keys():
         .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# I'm fairly sure GetEigenValues sorts the output from highest to lowest
 
     models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity", "Weights").Clone("cloneS" + key)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("cloneS" + key)
 
 can = ROOT.TCanvas("canName", "canTitle")
 
