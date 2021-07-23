@@ -14,7 +14,7 @@ fnames = [
     "PrivateSamples.SUEP_2018_mMed-400_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-750_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root",
     "PrivateSamples.SUEP_2018_mMed-1000_mDark-2_temp-2_decay-darkPho_13TeV-pythia8_n-100_0_RA2AnalysisTree.root"]
-'''
+
 # background:
 bfnames = [
     "Autumn18.QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
@@ -23,7 +23,7 @@ bfnames = [
     "Autumn18.QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root",
     "Autumn18.QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root"
-]'''
+]
 
 # sphericity tensor for r=2, used for sphericity:
 tensorString2 = \
@@ -84,15 +84,16 @@ hists = {}
 models = {}
 trackPtCut = 1
 weights = {}
-'''
+
 for i, bfname in enumerate(bfnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc + bfname
+    print(fullname)
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
     dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", floc + bfname)
-    entries = dFrames[range].Count().GetValue()
-    weights[range] = xSecs[i]*lum/entries
-'''
+    #entries = dFrames[range].Count().GetValue()
+    #weights[range] = xSecs[i]*lum/entries
+
 for i, fname in enumerate(fnames):
     fullname = "root://cmsxrootd.fnal.gov/"+floc+fname
     tname = "TreeMaker2/PreSelection"
