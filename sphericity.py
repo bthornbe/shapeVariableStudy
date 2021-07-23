@@ -25,6 +25,23 @@ bfnames = [
     "Autumn18.QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8_RA2AnalysisTree.root"
 ]
 
+# creates the sphericity tensor with r=1, as used for C, D, and LamdaMax:
+tensorString1 = \
+    '''
+    vector<vector<double>> s{{0,0,0},{0,0,0},{0,0,0}};    
+    for (int i=0; i<nPassingTracks; i++) 
+    { 
+        for (int j=0; j<3; j++) 
+        {
+            for (int k=0; k<3; k++) 
+            {
+                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(PassingTracks[i].Mag2())*Denominator);
+            }
+        }
+    } 
+    return s;
+    '''
+
 # sphericity tensor for r=2, used for sphericity:
 tensorString2 = \
     '''
@@ -41,6 +58,27 @@ tensorString2 = \
     } 
     return s;
     '''
+
+eigenString1 = \
+'''
+double a[9];
+for (int i = 0; i < 3; i++)
+{
+    for (int j = 0; j < 3; j++)
+    {
+        a[i+3*j] = SphericityTensor1.at(i).at(j);
+    }
+}
+TMatrixDSym s(3, a);
+TMatrixDSymEigen eigen(s); 
+TVectorD eigenVals = eigen.GetEigenValues();
+vector <double> eigenVals2;
+for (int i = 0; i < 3; i++)
+{
+        eigenVals2.push_back(eigenVals[i]);
+}
+return eigenVals2;
+'''
 
 eigenString2 = \
 '''
@@ -120,10 +158,21 @@ for key in dFrames.keys():
         .Define("Denominator2", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += PassingTracks[i].Mag2(); return denom;") \
         .Define("SphericityTensor2", tensorString2) \
         .Define("EigenVals2",eigenString2) \
-        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2")# I'm fairly sure GetEigenValues sorts the output from highest to lowest
+        .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2") \
+        .Define("SphericityTensor1", tensorString1) \
+        .Define("EigenVals1",eigenString1) \
+        .Define("C", "return (3*(EigenVals1[0]*EigenVals1[1]+EigenVals1[0]*EigenVals1[2]+EigenVals1[1]*EigenVals1[2]));") \
+        .Define("D", "return 27*EigenVals1[0]*EigenVals1[1]*EigenVals1[2];") \
+        .Define("LambdaMax", "return EigenVals1[0];")
 
     models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
     hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("Sphericity_" + key)
+    models[key + "C"] = ROOT.RDF.TH1DModel("C" + key, key, 50, 0., 1.)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "C"], "C").Clone("C_" + key)
+    models[key + "D"] = ROOT.RDF.TH1DModel("D" + key, key, 50, 0., 1.)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "D"], "D").Clone("D_" + key)
+    models[key + "L"] = ROOT.RDF.TH1DModel("L" + key, key, 50, 0., 1.)
+    hists[key] = filteredFrames[key].Histo1D(models[key + "L"], "LambdaMax").Clone("LambdaMax_" + key)
 
 can = ROOT.TCanvas("canName", "canTitle")
 
@@ -131,7 +180,7 @@ file = ROOT.TFile('sphericityHists.root', 'RECREATE')
 for key in hists:
     hists[key].Write()
 file.Close()
-
+'''
 hists["mMed-125"].SetLineColor(2)
 hists["mMed-400"].SetLineColor(3)
 hists["mMed-750"].SetLineColor(4)
@@ -149,4 +198,4 @@ for key in hists.keys():
     leg.AddEntry(hists[key], key, "l")
 leg.Draw()
 
-can.SaveAs("sphericityPlot.pdf")
+can.SaveAs("sphericityPlot.pdf")'''

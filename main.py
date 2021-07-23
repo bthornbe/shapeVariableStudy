@@ -67,6 +67,8 @@ for histType in hists:
         h.SetLineColor(theme_colors2[i])
         h.SetMinimum(10**4)
         h.SetMaximum(10**11)
+        h.GetXaxis().SetTitle(histType)
+        h.GetYaxis().SetTitle("Events")
         h.Draw("ehist same")
     can.BuildLegend(.76, .64, .9, .88).Draw()
     can.SetLogy()
