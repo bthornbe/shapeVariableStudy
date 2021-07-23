@@ -98,7 +98,7 @@ for i, fname in enumerate(fnames):
     tname = "TreeMaker2/PreSelection"
     mass = fname.split("_")[2]
     dFrames[mass] = ROOT.ROOT.RDataFrame(tname, fullname)
-    entries = dFrames[mass].Count().Getvalue()
+    entries = dFrames[mass].Count()
     weights[mass] = signalXSecs[i] * lum / entries
 
 for key in dFrames.keys():
