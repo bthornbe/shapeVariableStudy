@@ -124,6 +124,11 @@ for key in dFrames.keys():
 
 can = ROOT.TCanvas("canName", "canTitle")
 
+file = ROOT.TFile('sphericityHists.root', 'RECREATE')
+for key in dFrames.keys:
+    hists[key].Write()
+file.Close()
+
 hists["mMed-125"].SetLineColor(2)
 hists["mMed-400"].SetLineColor(3)
 hists["mMed-750"].SetLineColor(4)
