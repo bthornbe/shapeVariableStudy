@@ -90,7 +90,7 @@ for i, bfname in enumerate(bfnames):
     print(fullname)
     tname = "TreeMaker2/PreSelection"
     range = bfname.split("_")[1]
-    dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", floc + bfname)
+    dFrames[range] = ROOT.ROOT.RDataFrame("TreeMaker2/PreSelection", fullname)
     #entries = dFrames[range].Count().GetValue()
     #weights[range] = xSecs[i]*lum/entries
 
