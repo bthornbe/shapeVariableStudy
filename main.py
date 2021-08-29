@@ -13,7 +13,7 @@ file = ROOT.TFile('sphericityHists.root', 'READ')
 
 keys = file.GetListOfKeys()
 
-print(keys)
+print(keys.GetName())
 
 lum=135*1000
 xSecs=[311900,29070,5962,1207,119.9,25.24]
@@ -32,6 +32,7 @@ hists = {}
 
 for key in keys:
     k=key.GetName()
+    print (k)
     histType = k.split("_")[0]
     if histType not in hists:
         hists[histType] = {"sig":{}, "bck":{}}
@@ -44,6 +45,7 @@ sigs = sorted(hists[histType]["sig"].keys(), key=lambda x:int(x.split("-")[1]))
 bcks = sorted(hists[histType]["bck"].keys(), key=lambda x:int(x.split("to")[0].strip("HT")))
 
 for histType in hists:
+    print (histType)
     can = ROOT.TCanvas("can" + histType, "canTitle")
     if len(bcks) > 0:
         for i, b in enumerate(bcks):

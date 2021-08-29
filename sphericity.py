@@ -35,7 +35,7 @@ tensorString1 = \
         {
             for (int k=0; k<3; k++) 
             {
-                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(PassingTracks[i].Mag2())*Denominator);
+                s.at(j).at(k) += Momenta.at(i).at(j)*Momenta.at(i).at(k)/(sqrt(PassingTracks[i].Mag2())*Denominator1);
             }
         }
     } 
@@ -159,6 +159,7 @@ for key in dFrames.keys():
         .Define("SphericityTensor2", tensorString2) \
         .Define("EigenVals2",eigenString2) \
         .Define("Sphericity", "return (EigenVals2 [1] + EigenVals2 [2])*3/2") \
+        .Define("Denominator1", "double denom=0; for (int i=0; i<nPassingTracks; i++) denom += sqrt(PassingTracks[i].Mag2()); return denom;") \
         .Define("SphericityTensor1", tensorString1) \
         .Define("EigenVals1",eigenString1) \
         .Define("C", "return (3*(EigenVals1[0]*EigenVals1[1]+EigenVals1[0]*EigenVals1[2]+EigenVals1[1]*EigenVals1[2]));") \
@@ -166,13 +167,13 @@ for key in dFrames.keys():
         .Define("LambdaMax", "return EigenVals1[0];")
 
     models[key + "S"] = ROOT.RDF.TH1DModel("S" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("Sphericity_" + key)
+    hists["Sphericity_" + key] = filteredFrames[key].Histo1D(models[key + "S"], "Sphericity").Clone("Sphericity_" + key)
     models[key + "C"] = ROOT.RDF.TH1DModel("C" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "C"], "C").Clone("C_" + key)
+    hists["C_" + key] = filteredFrames[key].Histo1D(models[key + "C"], "C").Clone("C_" + key)
     models[key + "D"] = ROOT.RDF.TH1DModel("D" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "D"], "D").Clone("D_" + key)
+    hists["D_" + key] = filteredFrames[key].Histo1D(models[key + "D"], "D").Clone("D_" + key)
     models[key + "L"] = ROOT.RDF.TH1DModel("L" + key, key, 50, 0., 1.)
-    hists[key] = filteredFrames[key].Histo1D(models[key + "L"], "LambdaMax").Clone("LambdaMax_" + key)
+    hists["LambdaMax_" + key] = filteredFrames[key].Histo1D(models[key + "L"], "LambdaMax").Clone("LambdaMax_" + key)
 
 can = ROOT.TCanvas("canName", "canTitle")
 
